@@ -1,0 +1,7 @@
+.idea/**
+example_data
+input
+output
+tmp
+venv
+test.py
