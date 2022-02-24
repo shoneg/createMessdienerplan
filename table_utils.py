@@ -17,7 +17,7 @@ except ImportError as e:
   exit_programm()
 
 
-def docx_table_to_html_md_tabel(src_path: str = "example_data/messplan.docx", dst_path: str = "example_data/gottesdienst.html") -> None:
+def docx_table_to_html_md_tabel(src_path: str = "example_input/messplan.docx", dst_path: str = "example_input/gottesdienst.html") -> None:
   """
   Converts DOCX with a table to an HTML with table. So we can read it afterwards.
   :param src_path:
@@ -32,7 +32,7 @@ def docx_table_to_html_md_tabel(src_path: str = "example_data/messplan.docx", ds
     f.write(md_text)
 
 
-def get_gottesdienstplan_from_html(path: str = "example_data/gottesdienst.html") -> pd.DataFrame:
+def get_gottesdienstplan_from_html(path: str = "example_input/gottesdienst.html") -> pd.DataFrame:
   """
   Needs a table with gottesdiensten, then renames and rebuilds columns and return the result
   :param path: path to the gottesdienst table
@@ -62,7 +62,7 @@ def get_gottesdienstplan_from_html(path: str = "example_data/gottesdienst.html")
   return gottesdienst_table
 
 
-def get_messdiener_from_csv(path: str = "example_data/messdiener.csv") -> pd.DataFrame:
+def get_messdiener_from_csv(path: str = "example_input/messdiener.csv") -> pd.DataFrame:
   """
   Reads current messdiener from csv
   :param path: path to messdiener table
@@ -74,7 +74,7 @@ def get_messdiener_from_csv(path: str = "example_data/messdiener.csv") -> pd.Dat
   return messdiener_table
 
 
-def get_gottesdienst_arten_from_json(path: str = "example_data/gottesdienst-arten.json") -> dict:
+def get_gottesdienst_arten_from_json(path: str = "example_input/gottesdienst-arten.json") -> dict:
   """
   Reads gottesdienste-arten, which need messdiener from json
   :param path: path to gottesdienst-arten
