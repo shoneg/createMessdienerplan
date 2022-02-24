@@ -180,6 +180,8 @@ def prepare_files():
     if not exists(file_name):
       print(f'Die Datei {file_name} existiert nicht. Falls du den Namen der Datei dauerhaft ändern möchtest, kannst du das in der Datei constants.py machen')
       exit_programm()
+  if not exists('output'):
+    mkdir("output")
   shutil.copy2(MESSDIENER_INPUT, MESSDIENER_OUTPUT)
   print(f'Die Datei {MESSDIENER_INPUT} wird während der Ausführung aktualisiere (Einteilungen), falls etwas schief läuft wurde die ursprungsdatei nach {MESSDIENER_OUTPUT} kopiert')
   if not exists('tmp'):
