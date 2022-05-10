@@ -1,6 +1,6 @@
 from typing import Optional
 
-from exit_methods import *
+from src.exit_methods import *
 
 try:
     import datetime
@@ -12,7 +12,7 @@ try:
 
     from docx2md import Converter, DocxFile, DocxMedia
 
-    from constants import *
+    from src.constants import *
 except ImportError as e:
     print("Ein Import Fehler ist aufgetreten: " + str(e))
     input("Drücke Enter, um das Programm zu beenden.")

@@ -22,4 +22,6 @@ def teardown() -> None:
 
 
 def create_tables(creation_script: str) -> None:
-    pass
+    global con
+    con.executescript(creation_script)
+    con.commit()

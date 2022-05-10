@@ -71,7 +71,7 @@ In der Datei [input/messplan.docx](example_input/messplan.docx) muss eine Tabell
 
 Die hier angegebene Datei ist ein beispielhafter Dienstplan. In der Regel gibt es bereits eine Standardformat für Dienstpläne in Kirchengemeinden, die ohne gößeren Aufwand zur Verfügung gestellt
 werden können. Ggf. passt das Format dann nicht mehr ganz auf das hier angegebene Schema und es müssen lokal einige Änderungen am Quellcode vorgenommen werden. Gibt es ausschließlich Unterschiede in
-der Spaltenbennenung, können die eingelesenen Namen in der Datei [constants.py](constants.py) einfach angepasst werden.
+der Spaltenbennenung, können die eingelesenen Namen in der Datei [constants.py](src/constants.py) einfach angepasst werden.
 
 ## Verarbeitung
 

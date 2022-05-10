@@ -7,7 +7,7 @@ from typing import Optional
 
 from pandas import DataFrame
 
-from exit_methods import *
+from src.exit_methods import *
 from flask import Flask
 
 try:
@@ -20,11 +20,36 @@ try:
 
     import numpy as np
 
-    from table_utils import *
+    from src.table_utils import *
 except ImportError as e:
     print("Ein Import Fehler ist aufgetreten: " + str(e))
     input("Drücke Enter, um das Programm zu beenden.")
     exit_programm()
+
+from src.routes.index import handle as handle_index
+from src.routes.add_worship import handle as handle_add_worship
+
+app = Flask(__name__)
+
+
+@app.route('/')
+@app.route('/index')
+def index():
+    return handle_index()
+
+
+@app.route('/add_worship')
+def add_worship():
+    return handle_add_worship()
+
+
+#
+#
+#
+#
+#
+#
+#
 
 
 class Continue(Exception):
@@ -190,28 +215,6 @@ def build_messdienerplanung(gottesdienst_arten: dict, gottesdienste: pd.DataFram
     return gottesdienste, messdiener
 
 
-def prepare_files():
-    for file_name in [MESSPLAN_INPUT, MESSDIENER_INPUT, GOTTESDIENST_ARTEN_INPUT]:
-        if not exists(file_name):
-            print(
-                f'Die Datei {file_name} existiert nicht. Falls du den Namen der Datei dauerhaft ändern möchtest, kannst du das in der Datei constants.py machen')
-            exit_programm()
-    if not exists('output'):
-        mkdir("output")
-    shutil.copy2(MESSDIENER_INPUT, MESSDIENER_OUTPUT)
-    print(
-        f'Die Datei {MESSDIENER_INPUT} wird während der Ausführung aktualisiere (Einteilungen), falls etwas schief läuft wurde die ursprungsdatei nach {MESSDIENER_OUTPUT} kopiert')
-    if not exists('tmp'):
-        mkdir("tmp")
-
-
-def print_help() -> None:
-    print('Following arguments are available:')
-    print('-c or --create-new-db    creates a new empty database')
-    print('-r or --run              creates a new altar server schedule')
-    print('-l or --load-worships    loads new worships from a docx file and saves them in the db')
-
-
 def create_db() -> None:
     if exists('altar_server.db'):
         tmp_input: str = input(
@@ -331,53 +334,48 @@ def load_worships() -> None:
     con.commit()
     con.close()
 
+# if __name__ == '__main__':
+# warnings.filterwarnings('ignore')
+# pd.set_option('display.max_columns', None)
+# pd.set_option('display.width', 400)
+# logging.basicConfig(  # filename='file.log', level=logging.ERROR
+#     format='%(asctime)s -- %(levelname)s: [%(filename)s:%(lineno)d] %(message)s')
 
-def create_schedule() -> None:
-    pass
-
-
-if __name__ == '__main__':
-    # warnings.filterwarnings('ignore')
-    pd.set_option('display.max_columns', None)
-    pd.set_option('display.width', 400)
-    logging.basicConfig(  # filename='file.log', level=logging.ERROR
-        format='%(asctime)s -- %(levelname)s: [%(filename)s:%(lineno)d] %(message)s')
-
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], 'hcrl', ['help', 'create-new-db', 'run', 'load-worships'])
-    except getopt.GetoptError:
-        print('argument error. For more information run with -h or --help')
-        sys.exit(2)
-    for opt, arg in opts:
-        if opt in ['-h', '--help']:
-            exit_programm()
-        elif opt in ['-c', '--create-new-db']:
-            create_db()
-        elif opt in ['-r', '--run']:
-            create_schedule()
-        elif opt in ['-l', '--load-worships']:
-            load_worships()
-    exit_programm()
-
-    prepare_files()
-    docx_table_to_html_md_tabel(MESSPLAN_INPUT, MESSPLAN_TMP)
-    gottesdienste = get_gottesdienstplan_from_html(MESSPLAN_TMP)
-    messdiener = get_messdiener_from_csv(MESSDIENER_INPUT)
-    gottesdienst_arten = get_gottesdienst_arten_from_json(GOTTESDIENST_ARTEN_INPUT)
-    gottesdienste, messdiener = build_messdienerplanung(gottesdienst_arten, gottesdienste, messdiener)
-    print("Die Zuteilung wurde erfolgreich abgeschlossen")
-    gottesdienste = remove_not_wanted_columns(gottesdienste)
-    messdiener = reset_einteilungen(messdiener)
-    export_table_to_excel(gottesdienste, MESSPLAN_OUTPUT)
-    print(f"Der Messdienerplan wurde nach {MESSPLAN_OUTPUT} exportiert")
-    export_table_to_csv(messdiener, MESSDIENER_INPUT)
-    print(f'Die Einteilungen in {MESSDIENER_INPUT} wurden aktualisiert')
-    try:
-        shutil.rmtree("tmp")
-    except:
-        print(
-            'Während der Ordner tmp gelöscht werden sollte ist ein Fehler aufgetreten. Falls der Ordner noch existiert, kannst du es manuell versuchen, es ist aber auch nicht schlimm, wenn du nichts tust')
-    else:
-        print("Temporäre Dateien wurden gelöscht")
-
-    exit_programm()
+# try:
+#     opts, args = getopt.getopt(sys.argv[1:], 'hcrl', ['help', 'create-new-db', 'run', 'load-worships'])
+# except getopt.GetoptError:
+#     print('argument error. For more information run with -h or --help')
+#     sys.exit(2)
+# for opt, arg in opts:
+#     if opt in ['-h', '--help']:
+#         exit_programm()
+#     elif opt in ['-c', '--create-new-db']:
+#         create_db()
+#     elif opt in ['-r', '--run']:
+#         create_schedule()
+#     elif opt in ['-l', '--load-worships']:
+#         load_worships()
+# exit_programm()
+#
+# prepare_files()
+# docx_table_to_html_md_tabel(MESSPLAN_INPUT, MESSPLAN_TMP)
+# gottesdienste = get_gottesdienstplan_from_html(MESSPLAN_TMP)
+# messdiener = get_messdiener_from_csv(MESSDIENER_INPUT)
+# gottesdienst_arten = get_gottesdienst_arten_from_json(GOTTESDIENST_ARTEN_INPUT)
+# gottesdienste, messdiener = build_messdienerplanung(gottesdienst_arten, gottesdienste, messdiener)
+# print("Die Zuteilung wurde erfolgreich abgeschlossen")
+# gottesdienste = remove_not_wanted_columns(gottesdienste)
+# messdiener = reset_einteilungen(messdiener)
+# export_table_to_excel(gottesdienste, MESSPLAN_OUTPUT)
+# print(f"Der Messdienerplan wurde nach {MESSPLAN_OUTPUT} exportiert")
+# export_table_to_csv(messdiener, MESSDIENER_INPUT)
+# print(f'Die Einteilungen in {MESSDIENER_INPUT} wurden aktualisiert')
+# try:
+#     shutil.rmtree("tmp")
+# except:
+#     print(
+#         'Während der Ordner tmp gelöscht werden sollte ist ein Fehler aufgetreten. Falls der Ordner noch existiert, kannst du es manuell versuchen, es ist aber auch nicht schlimm, wenn du nichts tust')
+# else:
+#     print("Temporäre Dateien wurden gelöscht")
+#
+# exit_programm()
