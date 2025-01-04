@@ -1,17 +1,19 @@
-from typing import Tuple
-from constants import ANZAHL, BLACK_LIST_TAGE, DATUM, EINTEILUNGEN, GOTTESDIENST, GOTTESDIENST_ARTEN_INPUT, GRUPPEN_SPLITTINGS, ID, MESSDIENER, MESSDIENER_INPUT, MESSDIENER_OUTPUT, MESSDIENERZAHL, MESSPLAN_INPUT, MESSPLAN_OUTPUT, MESSPLAN_TMP, TAG, ZEIT
+"""Main file
+"""
+
+from constants import EINTEILUNGEN,  GOTTESDIENST_ARTEN_INPUT, GRUPPEN_SPLITTINGS, \
+    MESSDIENER_INPUT, MESSDIENER_OUTPUT, MESSDIENERZAHL, MESSPLAN_INPUT, MESSPLAN_OUTPUT, \
+    MESSPLAN_TMP
 from exit_methods import exit_program
-from table_utils import docx_table_to_html_md_table, export_table_to_csv, export_table_to_excel, get_gottesdienst_arten_from_json, get_gottesdienstplan_from_html, get_messdiener_from_csv
+from table_utils import docx_table_to_html_md_table, export_table_to_csv, export_table_to_excel, \
+    get_gottesdienst_arten_from_json, get_gottesdienstplan_from_html, get_messdiener_from_csv
 
 try:
-    import itertools
     import shutil
-    import sys
     import warnings
     from os.path import exists
     from os import mkdir
 
-    import numpy as np
     import pandas as pd
 except ImportError as e:
     print("Ein Import Fehler ist aufgetreten: " + str(e))
@@ -19,26 +21,22 @@ except ImportError as e:
     exit_program()
 
 
-class Continue(Exception):
-    pass
+def remove_not_wanted_columns(gd: pd.DataFrame) -> pd.DataFrame:
+    if MESSDIENERZAHL in gd:
+        del gd[MESSDIENERZAHL]
+    if GRUPPEN_SPLITTINGS in gd:
+        del gd[GRUPPEN_SPLITTINGS]
+    return gd
 
 
-def remove_not_wanted_columns(gottesdienste: pd.DataFrame) -> pd.DataFrame:
-    if MESSDIENERZAHL in gottesdienste:
-        del gottesdienste[MESSDIENERZAHL]
-    if GRUPPEN_SPLITTINGS in gottesdienste:
-        del gottesdienste[GRUPPEN_SPLITTINGS]
-    return gottesdienste
-
-
-def reset_einteilungen(messdiener: pd.DataFrame) -> pd.DataFrame:
+def reset_einteilungen(md: pd.DataFrame) -> pd.DataFrame:
     new_einteilungen = []
-    min = messdiener[messdiener[EINTEILUNGEN] ==
-                     messdiener[EINTEILUNGEN].min()].values[0][3]
-    for einteilung in messdiener[EINTEILUNGEN]:
-        new_einteilungen.append(einteilung - min)
-    messdiener[EINTEILUNGEN] = new_einteilungen
-    return messdiener
+    minimum = md[md[EINTEILUNGEN] ==
+                     md[EINTEILUNGEN].min()].values[0][3]
+    for einteilung in md[EINTEILUNGEN]:
+        new_einteilungen.append(einteilung - minimum)
+    md[EINTEILUNGEN] = new_einteilungen
+    return md
 
 
 def prepare_files():
@@ -57,7 +55,7 @@ def prepare_files():
 
 
 if __name__ == '__main__':
-    warnings.filterwarnings('ignore')
+    # warnings.filterwarnings('ignore')
 
     prepare_files()
     docx_table_to_html_md_table(MESSPLAN_INPUT, MESSPLAN_TMP)
