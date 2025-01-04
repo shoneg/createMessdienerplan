@@ -190,8 +190,8 @@ def build_messdienerplanung(gottesdienst_arten: dict, gottesdienste: pd.DataFram
 def prepare_files():
     for file_name in [MESSPLAN_INPUT, MESSDIENER_INPUT, GOTTESDIENST_ARTEN_INPUT]:
         if not exists(file_name):
-            print(f'Die Datei {
-                  file_name} existiert nicht. Falls du den Namen der Datei dauerhaft ändern möchtest, kannst du das in der Datei constants.py machen')
+            print(f'Die Datei {file_name} existiert nicht. Falls du den Namen der Datei ' +
+                  'dauerhaft ändern möchtest, kannst du das in der Datei constants.py machen')
             exit_program()
     if not exists('output'):
         mkdir("output")
@@ -204,8 +204,6 @@ def prepare_files():
 
 if __name__ == '__main__':
     warnings.filterwarnings('ignore')
-    pd.set_option('display.max_columns', None)
-    pd.set_option('display.width', 400)
 
     prepare_files()
     docx_table_to_html_md_table(MESSPLAN_INPUT, MESSPLAN_TMP)
@@ -213,9 +211,6 @@ if __name__ == '__main__':
     messdiener = get_messdiener_from_csv(MESSDIENER_INPUT)
     gottesdienst_arten = get_gottesdienst_arten_from_json(
         GOTTESDIENST_ARTEN_INPUT)
-    gottesdienste, messdiener = build_messdienerplanung(
-        gottesdienst_arten, gottesdienste, messdiener)
-    print("Die Zuteilung wurde erfolgreich abgeschlossen")
     gottesdienste = remove_not_wanted_columns(gottesdienste)
     messdiener = reset_einteilungen(messdiener)
     export_table_to_excel(gottesdienste, MESSPLAN_OUTPUT)

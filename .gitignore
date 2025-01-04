@@ -4,3 +4,4 @@ output
 tmp
 .venv
 test.py
+__pycache__

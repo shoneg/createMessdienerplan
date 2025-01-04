@@ -8,3 +8,4 @@ pytz==2024.2
 regex==2024.11.6
 six==1.17.0
 tzdata==2024.2
+XlsxWriter==3.2.0
