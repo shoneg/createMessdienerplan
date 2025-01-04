@@ -1,28 +1,19 @@
 # createMessdienerplan
 
 _createMessdienerplan_ ist ein Python-Skript, das automatisiert aus einer Liste von Messdienern und einem Messplan in einem Word-Dokument einen Messdienerplan erstellt. Dabei werden bestimmte Angaben
-zu den Messdiener:innen beachtet und die Anzahl der Einteilungen nachgehalten, sodass auf Dauer alle Dienenden ähnlich oft eingeteilt werden.
+zu den Messdiener:innen beachtet und die Anzahl der Einteilungen nachtgehalten, sodass auf Dauer alle Dienenden ähnlich oft eingeteilt werden.
 
 ## Vorbereitungen
 
-Vor der ersten Ausführung müssen die in Abschnitt [Eingabedateien](#Eingabedateien) angegebenen Dateien erzeugt werden. Außerdem werden folgende Python-Module benötigt:
+Vor der ersten Ausführung müssen die in Abschnitt [Eingabedateien](#eingabedateien) angegebenen Dateien erzeugt werden. Außerdem werden folgende Python-Module aus der [requirements-Datei](./requirements.txt) installiert werden:
 
-- docx2md
-- itertools
-- json
-- math
-- numpy
-- shutil
-- os
-- pandas
-- regex
-- sys
-- warnings
-- xlsxWriter
+```bash
+pip install -r requirements.txt
+```
 
 ## Eingabedateien
 
-Als Eingabedateien werden drei Dateien benötigt. Standardmäßig werden diese aus dem Verzeichnis `input` gelesen. Beispiele für die Datein und deren genaue Namen gibt es im Ordner `example_input`.
+Als Eingabedateien werden drei Dateien benötigt. Standardmäßig werden diese aus dem Verzeichnis `input` gelesen. Beispiele für die Dateien und deren genaue Namen gibt es im Ordner `example_input`.
 Wichtig ist, dass die Tabellen genau die angegebene Form haben.
 
 Hier kurze Erläuterungen zu den Dateien:
@@ -30,7 +21,7 @@ Hier kurze Erläuterungen zu den Dateien:
 ### Gottesdienstarten
 
 In der Datei [input/gottesdienst-arten.json](example_input/gottesdienst-arten.json) sollten als Keys die Gottesdienstarten aufgeführt sein, die regelmäßig abgehalten werden. Als Wert wird jeweils die
-Anzahl der Messdiener:innen angegeben, die im Normalfall für solch eine Messe eingeteilt werden. Die Gottesdienstarten sollten denen aus der Spalte `Gottesdienste` im [Messplan](#Messpan) entsprechen.
+Anzahl der Messdiener:innen angegeben, die im Normalfall für solch eine Messe eingeteilt werden. Die Gottesdienstarten sollten denen aus der Spalte `Gottesdienste` im [Messplan](#messplan) entsprechen.
 
 ### Messdiener
 
@@ -48,7 +39,7 @@ Diese Namen tauchen später im Messdienerplan auf. Bei Gruppen, die zusammen die
 
 #### Anzahl
 
-Die Anzahl der Namen, die in der Spalte [Namen](#Namen) eingetragen ist.
+Die Anzahl der Namen, die in der Spalte [Namen](#namen) eingetragen ist.
 
 #### Einteilungen
 
@@ -67,15 +58,15 @@ angegeben werden.
 
 ### Messplan
 
-In der Datei [input/messplan.docx](example_input/messplan.docx) muss eine Tabelle angegeben sein, in der `Datum`, `Zeit`, `Ort` und `Gottsdienst` angegeben sind.
+In der Datei [input/messplan.docx](example_input/messplan.docx) muss eine Tabelle angegeben sein, in der `Datum`, `Zeit`, `Ort` und `Gottesdienst` angegeben sind.
 
-Die hier angegebene Datei ist ein beispielhafter Dienstplan. In der Regel gibt es bereits eine Standardformat für Dienstpläne in Kirchengemeinden, die ohne gößeren Aufwand zur Verfügung gestellt
+Die hier angegebene Datei ist ein beispielhafter Dienstplan. In der Regel gibt es bereits eine Standardformat für Dienstpläne in Kirchengemeinden, die ohne größeren Aufwand zur Verfügung gestellt
 werden können. Ggf. passt das Format dann nicht mehr ganz auf das hier angegebene Schema und es müssen lokal einige Änderungen am Quellcode vorgenommen werden. Gibt es ausschließlich Unterschiede in
 der Spaltenbennenung, können die eingelesenen Namen in der Datei [constants.py](constants.py) einfach angepasst werden.
 
 ## Verarbeitung
 
-Bei Ausführung des Skripts wird zuerst abgefragt für welche Messe aus dem Messplan wie viele Personen dienen sollen. Dabei sind die Standardwerte die in den [Gottesdienstarten](#Gottensdiensarten)
+Bei Ausführung des Skripts wird zuerst abgefragt für welche Messe aus dem Messplan wie viele Personen dienen sollen. Dabei sind die Standardwerte die in den [Gottesdienstarten](#gottesdienstarten)
 angegebenen. Danach wird aus den angegebenen Daten ein Messdienerplan erstellt, der eine optimale Einteilung darstellt. Dieser Prozess kann je nach Eingabe längere Zeit in Anspruch nehmen, weil evtl.
 alle möglichen Kombinationen ausprobiert werden. Anschließend wird der erstellte Messdienerplan in eine Excel-Datei im Ordner `output` exportiert.
 
@@ -83,8 +74,8 @@ alle möglichen Kombinationen ausprobiert werden. Anschließend wird der erstell
 
 ### Geplante Updates
 
-- **Black-List-Personen** sollen in der messdiener.csv eingetragen werden können, sodass dann bestimmte Personen nicht zusammen eingeteilt werdne.
-- **Black-List-Daten** sollen in der messdiener.csv eingetragen werder können, sodass z. B. wenn ein Messdierer im Urlaub ist, dieser in der angegebenen Zeit nicht für Messen eingeteilt wird.
+- **Black-List-Personen** sollen in der messdiener.csv eingetragen werden können, sodass dann bestimmte Personen nicht zusammen eingeteilt werden.
+- **Black-List-Daten** sollen in der messdiener.csv eingetragen werden können, sodass z. B. wenn ein Messdiener im Urlaub ist, dieser in der angegebenen Zeit nicht für Messen eingeteilt wird.
 - **Entfernen der Anzahl-Spalte**, sodass zukünftig durch die Anzahl der Kommata in der Namen-Spalte die Anzahl ermittelt wird.
 
 ### Letzte Änderungen

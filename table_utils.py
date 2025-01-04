@@ -14,10 +14,10 @@ try:
 except ImportError as e:
   print("Ein Import Fehler ist aufgetreten: " + str(e))
   input("Drücke Enter, um das Programm zu beenden.")
-  exit_programm()
+  exit_program()
 
 
-def docx_table_to_html_md_tabel(src_path: str = "example_input/messplan.docx", dst_path: str = "example_input/gottesdienst.html") -> None:
+def docx_table_to_html_md_table(src_path: str = "example_input/messplan.docx", dst_path: str = "example_input/gottesdienst.html") -> None:
   """
   Converts DOCX with a table to an HTML with table. So we can read it afterwards.
   :param src_path:
